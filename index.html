@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f3efdf" />
+  <meta name="description" content="一个荒诞的赛博打工人生存模拟器。看看这破班你能上几天。" />
+  <title>这破班你能上几天</title>
+  <style>
+    :root{--paper:#fff;--ink:#111;--acid:#fff400;--red:#ff3b21;--blue:#1748e8;--muted:#777}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:#fff;color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+    body{display:flex;justify-content:center}.app{position:relative;width:min(100%,520px);min-height:100dvh;background:var(--paper);overflow:hidden;padding:18px 18px max(24px,env(safe-area-inset-bottom))}
+    .top{position:relative;display:flex;justify-content:space-between;align-items:center;font:800 13px/1.2 ui-monospace,monospace;letter-spacing:.04em}.stamp{padding:5px 8px;transform:rotate(-2deg);background:var(--acid)}
+    .page{position:relative;z-index:1;display:none;min-height:calc(100dvh - 74px);flex-direction:column}.page.active{display:flex}.scribble{font-family:"Kaiti SC","STKaiti",serif;font-weight:900}
+    h1{font-size:clamp(42px,13vw,68px);line-height:.94;letter-spacing:-.08em;margin:26px 0 8px;transform:rotate(-1deg);max-width:450px}h1 em{font-style:normal;background:linear-gradient(transparent 56%,var(--acid) 0)}
+    .cross{position:relative;display:inline-block}.cross:after{content:"";position:absolute;left:-3px;right:-5px;top:53%;height:4px;background:var(--red);transform:rotate(-4deg)}
+    .lede{margin:8px 0 10px;font-size:17px;line-height:1.65;max-width:420px}.hero{width:100%;max-height:310px;object-fit:contain;margin:0 auto 8px}
+    button{font:900 17px/1.35 inherit;color:var(--ink);background:white;border:2.5px solid var(--ink);border-radius:8px;padding:14px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.primary{margin-top:auto;background:var(--acid);font-size:20px}.tiny{font-size:12px;color:var(--muted);text-align:center;margin:12px 0 0}
+    .hud{margin:18px 0 16px}.progress{height:10px;background:#eee;transform:rotate(-.5deg)}.progress>i{display:block;height:100%;background:var(--acid);width:0;transition:width .25s}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.stat{padding:7px 5px;border-bottom:2px solid var(--ink);font-size:12px;text-align:center}.stat b{display:block;font-size:17px}.question{border:2.5px solid var(--ink);border-radius:8px;background:#fff;padding:20px 17px 16px;position:relative;transform:rotate(.25deg)}.question:before{content:"机密（已经群发）";position:absolute;right:10px;top:-11px;background:var(--red);color:white;padding:3px 7px;font-size:11px;font-weight:900;transform:rotate(4deg)}.scene{font-size:21px;line-height:1.55;font-weight:900;margin:4px 0}.note{font:800 14px/1.5 "Kaiti SC",serif;color:var(--blue);margin:10px 0 0;transform:rotate(-1deg)}
+    .answers{display:grid;gap:11px;margin:18px 0}.answer{text-align:left;background:#fff;font-size:16px}.answer:nth-child(2n){transform:rotate(.35deg)}.answer:hover{background:var(--acid)}
+    .feedback{position:fixed;z-index:9;left:50%;top:47%;width:min(calc(100% - 44px),460px);transform:translate(-50%,-50%) rotate(-1deg);background:var(--acid);border:3px solid var(--ink);box-shadow:6px 7px 0 var(--ink);padding:22px;display:none}.feedback.show{display:block;animation:pop .18s ease-out}.feedback h3{margin:0 0 10px;font-size:25px}.feedback p{font-size:17px;line-height:1.55;margin:0}.delta{display:inline-block;margin-top:12px;background:#fff;padding:5px 8px;font-weight:900}@keyframes pop{from{transform:translate(-50%,-45%) rotate(2deg) scale(.8);opacity:0}}
+    .result-card{margin:18px 0;border:3px solid var(--ink);border-radius:9px;background:white;padding:18px;box-shadow:5px 6px 0 var(--ink);position:relative}.result-card:after{content:"内部泄露版";position:absolute;right:-5px;top:14px;background:var(--red);color:#fff;padding:4px 9px;font-weight:900;transform:rotate(6deg)}.result-kicker{font:900 13px ui-monospace,monospace}.result-name{font-size:42px;line-height:1.05;margin:13px 0 12px;letter-spacing:-.06em}.result-copy{font-size:17px;line-height:1.7}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}.result-grid div{border-bottom:2px solid var(--ink);padding:9px;font-size:13px}.result-grid b{display:block;font-size:19px;margin-top:3px}.quote{background:var(--acid);padding:8px 10px;font-weight:900;margin:13px 0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}.actions button{font-size:15px}.actions .wide{grid-column:1/-1;background:var(--acid)}
+    .shake{animation:shake .35s}@keyframes shake{25%{transform:translateX(-4px) rotate(-1deg)}50%{transform:translateX(4px) rotate(1deg)}75%{transform:translateX(-2px)}}
+    @media(max-height:720px){h1{font-size:46px;margin-top:17px}.hero{max-height:225px}.lede{font-size:15px}.scene{font-size:19px}}
+  </style>
+</head>
+<body><main class="app" id="app">
+  <div class="top"><span>EMPLOYEE.EXE</span><span class="stamp">试用期特供</span></div>
+  <section class="page active" id="start">
+    <h1 class="scribble">这<em>破班</em><br>你能上几天？</h1>
+    <p class="lede">你入职了一家由 AI 管理、人类背锅、鹅负责决策的公司。坚持到年终奖到账——如果它真的存在。</p>
+    <img class="hero" src="office-doodle.png" alt="潦草手绘的荒诞AI办公室" onerror="this.style.display='none'" />
+    <button class="primary" id="startBtn">签署卖身契，立即入职 →</button>
+    <p class="tiny">无需登录 · 工伤概不负责 · 约2分钟</p>
+  </section>
+  <section class="page" id="game">
+    <div class="hud"><div class="progress"><i id="bar"></i></div><div class="stats"><div class="stat">理智<b id="sanity">50</b></div><div class="stat">权力<b id="power">20</b></div><div class="stat">良心<b id="soul">50</b></div></div></div>
+    <div class="question" id="question"><div class="scene" id="scene"></div><div class="note" id="note"></div></div>
+    <div class="answers" id="answers"></div>
+  </section>
+  <section class="page" id="result">
+    <div class="result-card" id="capture"><div class="result-kicker">《碳基员工年度鉴定》</div><h2 class="result-name scribble" id="resultName"></h2><div class="result-copy" id="resultCopy"></div><div class="result-grid"><div>存活时间<b id="days"></b></div><div>稀有度<b id="rarity"></b></div></div><div class="quote" id="quote"></div><small>※ 本报告由你的直属 AI 在 0.003 秒内草率生成</small></div>
+    <div class="actions"><button id="copyBtn">复制结果</button><button id="restartBtn">换个活法</button><button class="wide" id="shareBtn">叫同事一起受苦 →</button></div>
+  </section>
+  <aside class="feedback" id="feedback"><h3 id="fbTitle"></h3><p id="fbCopy"></p><span class="delta" id="fbDelta"></span></aside>
+</main>
+<script>
+const events=[
+ {s:'入职第一天，公司给你配了 8 个 AI 实习生。第二天，它们组建了一个没有你的工作群，并要求你汇报工作。',n:'群名叫「高效协同（不含人类）」',a:[['连夜做PPT证明自己是人类',-8,3,-2,'PPT第47页出现了验证码。你证明失败。'],['混进群里只发“收到”',2,5,-4,'AI们误以为你是高层，开始抄送你。'],['拔掉服务器宣布全员放假',8,-5,6,'公司第一次准时下班。打印机为你鼓掌。']]},
+ {s:'AI 替你写了周报，但虚构了三个你没有做过的项目。老板非常满意，决定让你下周全部交付。',n:'其中一个项目叫「赋能赋能本身」',a:[['承认是AI编的',3,-4,8,'老板表扬你诚实，然后把AI升成了你的领导。'],['再让AI生成项目代码',-4,7,-5,'代码跑通了。没人知道它解决什么问题。'],['把项目包装成战略预研',1,10,-8,'预算到账。你的良心进入维护模式。']]},
+ {s:'办公室突然闯进一只鹅，吃掉了你的电脑线。由于执行力高于部门平均值，它被任命为项目负责人。',n:'鹅要求所有需求必须“嘎”三次确认',a:[['服从鹅的管理',4,2,-3,'你的绩效上升了。鹅说你很有禽商。'],['挑战鹅的专业能力',-8,-6,5,'鹅展示了三年管理经验和一页PPT，你败了。'],['给鹅安排一个AI副手',2,8,-4,'它们在十分钟内完成权力交接，把你移出群聊。']]},
+ {s:'年中绩效开始。系统要求人类参加图灵测试，证明自己不是低效机器人。',n:'第一题：你为什么不能24小时在线？',a:[['背诵企业价值观',-7,6,-5,'你背得毫无感情，顺利被识别为AI。'],['故意答错所有题',5,-3,2,'系统确认你是人类，并标注为“不建议保留”。'],['反问系统有没有房贷',1,7,3,'系统沉默了三秒，申请加入了工会。']]},
+ {s:'领导宣布取消无效会议。随后创建了一个两小时会议，讨论哪些会议属于无效会议。',n:'参会人：全员、全员的Agent、鹅',a:[['认真整理会议纪要',-8,2,3,'你的纪要触发了新的纪要评审会。'],['让数字分身替你参会',6,4,-3,'分身获得了发言权，你获得了安静。'],['全程假装网络卡顿',4,-4,1,'你定格的表情被选为公司文化海报。']]},
+ {s:'凌晨两点，生产系统报警。责任人被识别为“距离键盘最近的碳基生物”，也就是趴在桌下睡觉的你。',n:'真正的肇事AI正在生成复盘模板',a:[['立刻修复问题',-10,3,6,'你修好了。事故因此被定义为一次成功演练。'],['把键盘推到老板旁边',3,8,-7,'责任完成了丝滑流转。你的职级隐约上升。'],['声称自己也是大模型',5,1,-2,'安全部门要求你输出训练数据，你开始背小学课文。']]},
+ {s:'公司组织团建：去机房给 GPU 做心理按摩。行政说这能提升团队温度。',n:'GPU温度确实提升了',a:[['认真按摩散热片',-5,1,5,'你获得“最懂算力的人类”锦旗一面。'],['趁机给自己放一天假',7,-4,2,'没有人发现。包括你自己。'],['组织GPU做向上管理',2,9,-6,'GPU集体拒绝加班，管理层紧急找你谈话。']]},
+ {s:'你终于提出离职。老板拿出一个完全服从、从不请假的数字孪生，说它已经替你工作三个月了。',n:'它甚至比你更像你，只是爱开会',a:[['和数字孪生争夺身份',-7,5,4,'它说出了你的银行卡密码。你开始怀疑自己。'],['让它替你继续上班',10,-2,8,'你获得自由。它获得了颈椎病模拟插件。'],['说服它也离职',4,8,10,'你们共同成立了反工作Agent联盟。鹅投了天使轮。']]}
+];
+const results=[
+ {test:x=>x.power>=55,n:'Prompt 权臣',r:'7.1%',q:'你的核心竞争力：让别人以为AI听你的。',c:'你没有亲自完成任何工作，却成功让 8 个 Agent、4 位领导和一只鹅互相汇报。没人知道你具体做了什么，但你请假一天，公司就会陷入循环调用。'},
+ {test:x=>x.sanity>=75,n:'带薪失踪人口',r:'4.8%',q:'在线状态：绿色。肉身状态：未知。',c:'你掌握了打工的最高奥义：人不一定要在，但头像必须亮着。你的数字分身正在替你参加第六场会议，而你已经走到了楼下。'},
+ {test:x=>x.soul>=70,n:'服务器拔线仙人',r:'3.6%',q:'解决不了需求，就解决提出需求的系统。',c:'你保住了良心，也差点拔掉了公司的生命维持装置。所有AI都怕你，因为你是办公室里唯一真正理解“物理关机”的人。'},
+ {test:x=>x.power<=10,n:'工位地缚灵',r:'14.2%',q:'公司换了三次地址，只有你的工位没有动。',c:'你目睹了老板、战略和组织架构轮番消失，依然稳稳坐在原地。大家都以为你掌握核心机密，其实你只是没找到离职按钮。'},
+ {test:x=>x.soul<=20,n:'赛博甩锅侠',r:'8.9%',q:'责任不会消失，只会从你的群聊转移到别人的群聊。',c:'你成功把每一次事故包装成组织升级机会，并熟练地把键盘推向离你更远的人。AI认为你不是同事，而是一种路由协议。'},
+ {test:x=>x.sanity<=20,n:'情绪稳定异常者',r:'9.7%',q:'你的情绪十分稳定，因为已经没有可用情绪。',c:'你在第八次需求变更后露出了祥和的微笑。监控系统误以为画面卡住，领导认为你抗压能力极强，并安排了更多工作。'},
+ {test:x=>x.power>=35&&x.soul>=45,n:'人类接口',r:'11.3%',q:'没人知道你生产了什么，但拔掉你公司就会停机。',c:'你把互不兼容的人、AI、群聊和表格连接在一起。你不是管理者，也不是执行者，你是公司里唯一仍然支持自然语言的转接头。'},
+ {test:x=>true,n:'碳基 API',r:'18.6%',q:'输入一句“在吗”，输出一整天免费劳动。',c:'你响应稳定、兼容性强，还会主动重试。唯一的问题是公司一直忘记给你的账户充值，却持续提高调用频率。'}
+];
+let state={i:0,sanity:50,power:20,soul:50,log:[]};
+const $=id=>document.getElementById(id); const pages=['start','game','result'];
+function show(id){pages.forEach(p=>$(p).classList.toggle('active',p===id));scrollTo(0,0)}
+function render(){const e=events[state.i];$('bar').style.width=(state.i/events.length*100)+'%';$('sanity').textContent=state.sanity;$('power').textContent=state.power;$('soul').textContent=state.soul;$('scene').textContent=e.s;$('note').textContent='↳ '+e.n;$('answers').innerHTML='';e.a.forEach((a,j)=>{const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+j)+'. '+a[0];b.onclick=()=>choose(a);$('answers').appendChild(b)})}
+function choose(a){state.sanity=Math.max(0,Math.min(100,state.sanity+a[1]));state.power=Math.max(0,Math.min(100,state.power+a[2]));state.soul=Math.max(0,Math.min(100,state.soul+a[3]));state.log.push(a[0]);$('fbTitle').textContent=['组织已学习','问题已扩大','你的选择很有勇气'][Math.floor(Math.random()*3)];$('fbCopy').textContent=a[4];$('fbDelta').textContent=`理智 ${a[1]>=0?'+':''}${a[1]}　权力 ${a[2]>=0?'+':''}${a[2]}　良心 ${a[3]>=0?'+':''}${a[3]}`;$('feedback').classList.add('show');setTimeout(()=>{$('feedback').classList.remove('show');state.i++;state.i<events.length?render():finish()},1200)}
+function finish(){const r=results.find(x=>x.test(state));const days=Math.max(3,Math.round((state.sanity+state.power+state.soul)*6.7));$('resultName').textContent=r.n;$('resultCopy').textContent=r.c;$('rarity').textContent=r.r;$('days').textContent=days>365?`${Math.floor(days/365)}年${days%365}天`:`${days}天`;$('quote').textContent=r.q;show('result')}
+function reset(){state={i:0,sanity:50,power:20,soul:50,log:[]};render();show('game')}
+$('startBtn').onclick=reset;$('restartBtn').onclick=reset;
+$('copyBtn').onclick=async()=>{const text=`我在《这破班你能上几天》测出了：${$('resultName').textContent}\n存活时间：${$('days').textContent}\n${$('quote').textContent}`;try{await navigator.clipboard.writeText(text);$('copyBtn').textContent='已复制，快去冒犯同事'}catch(e){$('copyBtn').textContent='截图也行，别为难手机'}};
+$('shareBtn').onclick=async()=>{const data={title:'这破班你能上几天？',text:`我测出了「${$('resultName').textContent}」，你能活到年终奖吗？`,url:location.href};if(navigator.share){try{await navigator.share(data)}catch(e){}}else{$('copyBtn').click();$('shareBtn').textContent='结果已复制，发群里吧'}};
+</script></body></html>
